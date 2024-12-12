@@ -51,8 +51,10 @@ f_{\hat{d}}(X) \triangleq \sum_{i=\hat{d}+1}^{\text{min}(D,N)} \sigma_i (X)
 = \| X \|_* - \| X \|_{\mathrm{Ky-Fan}(\hat{d})}
 ```
 where
-$$ || \cdot ||_{*} $$ denotes the nuclear norm,
-and $$ || \cdot ||_{\mathrm{Ky-Fan}(\hat{d})} $$ denotes the Ky-Fan norm defined as the sum of the first $\hat{d}$ singular values.
+```math
+\| X \|_* ,  \| X \|_{\mathrm{Ky-Fan}(\hat{d})}
+```
+denotes the nuclear norm and the Ky-Fan norm respectively. The Ky-Fan norm is defined as the sum of the first $\hat{d}$ singular values and the nuclear norm is the sum of all singular values.
 
 ## LR-ALPCAH
 
