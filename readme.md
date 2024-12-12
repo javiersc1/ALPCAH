@@ -16,11 +16,9 @@ and $z_i \in \mathbb{R}^{d}$ are the corresponding basis coordinates.
 Collect the measurements into a matrix
 $Y = [\hspace{1mm} y_1, \ldots, y_N \hspace{1mm} ]$.
 Then the heteroscedastic model we consider is
-$$
-y_i = x_i + \epsilon_i
+$$y_i = x_i + \epsilon_i
 \quad \text{where} \quad
-\epsilon_i \sim \mathcal{N}(0, \nu_i I)
-$$
+\epsilon_i \sim \mathcal{N}(0, \nu_i I)$$
 assuming Gaussian noise with variance $\nu_i$,
 where $I$ denotes the $D \times D$ identity matrix.
 We consider both the case where each data point may have its own noise variance,
@@ -36,20 +34,16 @@ In ALPCAH, we propose an optimization problem that estimates the heterogeneous n
 
 Let $\Pi = \mathrm{diag}(\nu_1,\ldots,\nu_N) \in \mathbb{R}^{N \times N}$
 be a diagonal matrix representing the (typically unknown) noise variances. Then, we solve:
-$$
-    \argmin_{X,\Pi} \lambda f_{\hat{d}}(X)
+$$\argmin_{X,\Pi} \lambda f_{\hat{d}}(X)
     + 
     \frac{1}{2} \| (Y - X) \Pi^{-1/2} \|_F^2
-    + \frac{D}{2} \log |\Pi|
-$$
+    + \frac{D}{2} \log |\Pi|$$
 where $f_{\hat{d}}(X)$ is a novel functional that promotes low-rank structure in $X$,
 $\hat{d}$ is the rank parameter,
 and
 $\lambda \in \mathbb{R}^{+}$ is a regularization parameter. In our work, we explore the functional:
-$$
-f_{\hat{d}}(X) \triangleq \sum_{i=\hat{d}+1}^{\text{min}(D,N)} \sigma_i (X)
-= \| X \|_* - \| X \|_{\mathrm{Ky-Fan}(\hat{d})}
-$$
+$$f_{\hat{d}}(X) \triangleq \sum_{i=\hat{d}+1}^{\text{min}(D,N)} \sigma_i (X)
+= \| X \|_* - \| X \|_{\mathrm{Ky-Fan}(\hat{d})}$$
 where
 $\| \cdot \|_*$ denotes the nuclear norm,
 and $\| \cdot \|_{\mathrm{Ky-Fan}(\hat{d})}$ denotes the Ky-Fan norm defined as the sum of the first $\hat{d}$ singular values.
@@ -68,11 +62,9 @@ and $R \in \mathbb{R}^{N \times \hat{d}}$
 for some rank estimate $\hat{d}$. Using the factorized form,
 we propose to estimate $X$
 by solving for $L$ and $R$ in the following optimization problem:
-$$
-    \hat{L}, \hat{R}, \hat{\Pi} =  \argmin_{L,R,\Pi} \ f(L,R,\Pi) \\
+$$\hat{L}, \hat{R}, \hat{\Pi} =  \argmin_{L,R,\Pi} \ f(L,R,\Pi) \\
     f(L,R,\Pi) =
-    \frac{1}{2} \| (Y - L R') \Pi^{-1/2} \|_F^2 + \frac{D}{2} \log |\Pi|
-$$
+    \frac{1}{2} \| (Y - L R') \Pi^{-1/2} \|_F^2 + \frac{D}{2} \log |\Pi|$$
 and extracting the subspace basis by doing $\hat{U} = \text{SVD}(L)$ since both matrices have the same range.
 
 # Installation
