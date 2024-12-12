@@ -37,7 +37,7 @@ In ALPCAH, we propose an optimization problem that estimates the heterogeneous n
 Let $\Pi = \mathrm{diag}(\nu_1,\ldots,\nu_N) \in \mathbb{R}^{N \times N}$
 be a diagonal matrix representing the (typically unknown) noise variances. Then, we solve:
 ```math
-\argmin_{X,\Pi} \lambda f_{\hat{d}}(X)
+\min_{X,\Pi} \lambda f_{\hat{d}}(X)
     + 
     \frac{1}{2} \| (Y - X) \Pi^{-1/2} \|_F^2
     + \frac{D}{2} \log |\Pi|
@@ -69,9 +69,8 @@ for some rank estimate $\hat{d}$. Using the factorized form,
 we propose to estimate $X$
 by solving for $L$ and $R$ in the following optimization problem:
 ```math
-\hat{L}, \hat{R}, \hat{\Pi} =  \argmin_{L,R,\Pi} \ f(L,R,\Pi) \\
-    f(L,R,\Pi) =
-    \frac{1}{2} \| (Y - L R') \Pi^{-1/2} \|_F^2 + \frac{D}{2} \log |\Pi|
+  \min_{L,R,\Pi} \ f(L,R,\Pi) \\
+    f(L,R,\Pi) = \frac{1}{2} \| (Y - L R') \Pi^{-1/2} \|_F^2 + \frac{D}{2} \log |\Pi|
 ```
 and extracting the subspace basis by doing $\hat{U} = \text{SVD}(L)$ since both matrices have the same range.
 
