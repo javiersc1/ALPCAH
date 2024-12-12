@@ -42,7 +42,7 @@ be a diagonal matrix representing the (typically unknown) noise variances. Then,
     \frac{1}{2} \| (Y - X) \Pi^{-1/2} \|_F^2
     + \frac{D}{2} \log |\Pi|
 ```
-where $f_{\hat{d}}(X)$ is a novel functional that promotes low-rank structure in $X$,
+where $$ f_{\hat{d}}(X) $$ is a novel functional that promotes low-rank structure in $X$,
 $\hat{d}$ is the rank parameter,
 and
 $\lambda \in \mathbb{R}^{+}$ is a regularization parameter. In our work, we explore the functional:
@@ -51,8 +51,8 @@ f_{\hat{d}}(X) \triangleq \sum_{i=\hat{d}+1}^{\text{min}(D,N)} \sigma_i (X)
 = \| X \|_* - \| X \|_{\mathrm{Ky-Fan}(\hat{d})}
 ```
 where
-$\| \cdot \|_*$ denotes the nuclear norm,
-and $\| \cdot \|_{\mathrm{Ky-Fan}(\hat{d})}$ denotes the Ky-Fan norm defined as the sum of the first $\hat{d}$ singular values.
+$$ \| \cdot \|_* $$ denotes the nuclear norm,
+and $$ \| \cdot \|_{\mathrm{Ky-Fan}(\hat{d})} $$ denotes the Ky-Fan norm defined as the sum of the first $\hat{d}$ singular values.
 
 ## LR-ALPCAH
 
