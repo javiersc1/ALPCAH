@@ -4,6 +4,9 @@ ALPCAH/LR-ALPCAH is a method for approximating subspace bases under heteroscedas
 
 ![title](figures/subspace_example.svg)
 
+# Errata
+Errata: In eqn. (30) of the IEEE TSP paper, both of the \Pi_t matrices should be inverted. This has been fixed in the ArXiv version of the paper, see https://arxiv.org/abs/2505.07272.
+
 # Model
 
 Let $y_i \in \mathbb{R}^{D}$ denote the data samples

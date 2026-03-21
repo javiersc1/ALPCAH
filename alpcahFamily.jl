@@ -17,10 +17,10 @@ function ALPCAH(Y::Matrix, k::Int, λr::Real; μ::Real=0.01, ρ::Real=1.0, alpca
     var = ones(length(var))
     for i = 1:alpcahIter
         X = TSVT(Y-Z+(1/μ)*Λ, λr/μ,k) # TSVT(Y-Z+(1/μ)*Λ, λr/μ,k)
-        Z = μ*(Y-X+(1/μ)*Λ)*inv(Π+μ*I)
+        Z = μ*(Y-X+(1/μ)*Λ)*inv(Πinv + μ*I)
         Λ = Λ + μ*(Y-X-Z)
         var = grouplessVarianceUpdate(Y, X; varfloor=varfloor)
-        Π = Diagonal(var.^-1)
+        Πinv = Diagonal(var.^-1)
         μ = ρ*μ
     end
     U = svd(X).U[:,1:k]   
@@ -75,11 +75,11 @@ function LR_ALPCAH(Y::Matrix,d::Int; varfloor::Real=1e-9, alpcahIter::Int = 1000
 
     # variance method initialization
     v = grouplessVarianceUpdate(Y, L*R'; varfloor=varfloor)
-    Π = Diagonal(v.^-1)
+    Πinv = Diagonal(v.^-1)
 
     for i=1:alpcahIter
         # left right updates
-        L = Y*Π*R*inv(R'*Π*R)
+        L = Y*Πinv*R*inv(R'*Πinv*R) # Caution: eqn. (30) in the T-SP paper is missing the inverse of Π
         R = Y'*L*inv(L'*L)
         # variance updates
         v = grouplessVarianceUpdate(Y, L*R'; varfloor=varfloor)
@@ -97,11 +97,11 @@ function LR_ALPCAH_KNOWN(Y::Matrix,d::Int, w::Vector; varfloor::Real=1e-9, alpca
     T = svd(Y)
     L = T.U[:,1:d]*Diagonal(sqrt.(T.S[1:d]))
     R = T.V[:,1:d]*Diagonal(sqrt.(T.S[1:d]))
-    Π = Diagonal(w.^-1)
+    Πinv = Diagonal(w.^-1)
 
     for i=1:alpcahIter
         # left right updates
-        L = Y*Π*R*inv(R'*Π*R)
+        L = Y*Πinv*R*inv(R'*Πinv*R) # Caution: eqn. (30) in the T-SP paper is missing the inverse of Π
         R = Y'*L*inv(L'*L)
     end
     # extract left vectors from L
@@ -110,7 +110,7 @@ function LR_ALPCAH_KNOWN(Y::Matrix,d::Int, w::Vector; varfloor::Real=1e-9, alpca
 end
 
 function grouplessVarianceUpdate(Y::Matrix, X::Matrix; varfloor::Real=1e-9)
-    D= size(Y)[1]
+    D = size(Y)[1]
     Π = (1/D)*norm.(eachcol(Y - X)).^2
     return max.(Π, varfloor)
 end
@@ -165,10 +165,10 @@ function ALPCAH_GROUPED(Y::Matrix, k::Int, λr::Real; μ::Real=0.01, ρ::Real=1.
     var = ones(length(var))
     for i = 1:alpcahIter
         X = TSVT(Y-Z+(1/μ)*Λ, λr/μ,k) # TSVT(Y-Z+(1/μ)*Λ, λr/μ,k)
-        Z = μ*(Y-X+(1/μ)*Λ)*inv(Π+μ*I)
+        Z = μ*(Y-X+(1/μ)*Λ)*inv(Πinv + μ*I)
         Λ = Λ + μ*(Y-X-Z)
         var = groupedVarianceUpdate(Y, X, goodpts; varfloor=varfloor)
-        Π = Diagonal(var.^-1)
+        Πinv = Diagonal(var.^-1)
         μ = ρ*μ
     end
     U = svd(X).U[:,1:k]   
@@ -185,15 +185,15 @@ function LR_ALPCAH_GROUPED(Y::Matrix,d::Int; varfloor::Real=1e-9, alpcahIter::In
 
     # variance method initialization
     v = groupedVarianceUpdate(Y, L*R', goodpts; varfloor=varfloor)
-    Π = Diagonal(v.^-1)
+    Πinv = Diagonal(v.^-1)
 
     for i=1:alpcahIter
         # left right updates
-        L = Y*Π*R*inv(R'*Π*R)
+        L = Y*Πinv*R*inv(R'*Πinv*R) # Caution: eqn. (30) in the T-SP paper is missing the inverse of Π
         R = Y'*L*inv(L'*L)
         # variance updates
         v = groupedVarianceUpdate(Y, L*R', goodpts; varfloor=varfloor)
-        Π = Diagonal(v.^-1)
+        Πinv = Diagonal(v.^-1)
     end
     # extract left vectors from L
     U = svd(L).U
@@ -215,10 +215,10 @@ function ALPCAH_NUCLEAR(Y::Matrix, k::Int, λr::Real; μ::Real=0.01, ρ::Real=1.
     var = ones(length(var))
     for i = 1:alpcahIter
         X = SVST(Y-Z+(1/μ)*Λ, λr/μ) 
-        Z = μ*(Y-X+(1/μ)*Λ)*inv(Π+μ*I)
+        Z = μ*(Y-X+(1/μ)*Λ)*inv(Πinv + μ*I)
         Λ = Λ + μ*(Y-X-Z)
         var = grouplessVarianceUpdate(Y, X; varfloor=varfloor)
-        Π = Diagonal(var.^-1)
+        Πinv = Diagonal(var.^-1)
         μ = ρ*μ
     end
     U = svd(X).U[:,1:k]   
@@ -229,7 +229,7 @@ function ALPCAH_NUCLEAR_KNOWN(Y::Matrix, k::Int, λr::Real, var::Vector; μ::Rea
     U_init = svd(Y).U[:,1:k]
     X = deepcopy(U_init*U_init'*Y)
     Z = deepcopy(Y-X)
-    Π = Diagonal(var.^-1)
+    Πinv = Diagonal(var.^-1)
     Λ = sign.(Y)
     Λ = deepcopy(Λ ./ (max(opnorm(Λ), (1/λr)*norm(Λ, Inf))))
     #X = zeros(size(Y))
@@ -237,7 +237,7 @@ function ALPCAH_NUCLEAR_KNOWN(Y::Matrix, k::Int, λr::Real, var::Vector; μ::Rea
     #var = ones(length(var))
     for i = 1:alpcahIter
         X = SVST(Y-Z+(1/μ)*Λ, λr/μ) 
-        Z = μ*(Y-X+(1/μ)*Λ)*inv(Π+μ*I)
+        Z = μ*(Y-X+(1/μ)*Λ)*inv(Πinv + μ*I)
         Λ = Λ + μ*(Y-X-Z)
         μ = ρ*μ
     end
