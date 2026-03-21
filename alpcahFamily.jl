@@ -1,6 +1,7 @@
 using TSVD
 using LinearAlgebra
 using MIRT
+using FlipPA
 
 function ALPCAH(Y::Matrix, k::Int, λr::Real; μ::Real=0.01, ρ::Real=1.0, alpcahIter::Int=1000, varfloor::Real=1e-9)
     U_init = svd(Y).U[:,1:k]
